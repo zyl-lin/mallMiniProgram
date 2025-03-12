@@ -27,6 +27,12 @@ if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir);
 }
 
+// 确保分类图片上传目录存在
+const categoryUploadDir = path.join(__dirname, 'uploads/category');
+if (!fs.existsSync(categoryUploadDir)){
+    fs.mkdirSync(categoryUploadDir, { recursive: true });
+}
+
 // 静态文件服务 - 前端构建文件
 app.use(express.static(path.join(__dirname, 'dist')));
 

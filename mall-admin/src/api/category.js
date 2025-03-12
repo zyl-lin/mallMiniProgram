@@ -8,6 +8,14 @@ export function getCategories() {
   })
 }
 
+// 获取分类列表
+export function getCategoryList() {
+  return request({
+    url: '/api/admin/category/list',
+    method: 'get'
+  })
+}
+
 // 新增分类
 export function addCategory(data) {
   return request({
@@ -21,7 +29,7 @@ export function addCategory(data) {
 export function updateCategory(data) {
   return request({
     url: '/api/admin/category/update',
-    method: 'put',
+    method: 'post',
     data
   })
 }
@@ -30,8 +38,8 @@ export function updateCategory(data) {
 export function deleteCategory(id) {
   return request({
     url: '/api/admin/category/delete',
-    method: 'delete',
-    params: { id }
+    method: 'post',
+    data: { id }
   })
 }
 

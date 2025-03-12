@@ -39,6 +39,13 @@ export const constantRoutes = [
         meta: { title: '商品列表' }
       },
       {
+        path: 'edit/:id?',
+        component: () => import('@/views/goods/edit'),
+        name: 'GoodsEdit',
+        meta: { title: '编辑商品' },
+        hidden: true
+      },
+      {
         path: 'category',
         component: () => import('@/views/goods/category'),
         name: 'Category',

@@ -22,7 +22,9 @@
       border
       fit
       highlight-current-row
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column type="selection" width="55" />
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           {{ scope.row.id }}
@@ -75,11 +77,14 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
+
+    <el-button type="primary" @click="handleBatchUpdateStatus(1)">批量上架</el-button>
+    <el-button type="primary" @click="handleBatchUpdateStatus(0)">批量下架</el-button>
   </div>
 </template>
 
 <script>
-import { getGoodsList } from '@/api/goods'
+import { getGoodsList, batchUpdateStatus } from '@/api/goods'
 
 export default {
   name: 'GoodsList',
@@ -93,7 +98,8 @@ export default {
         limit: 20,
         name: undefined,
         status: undefined
-      }
+      },
+      multipleSelection: []
     }
   },
   created() {
@@ -116,13 +122,35 @@ export default {
       this.getList()
     },
     handleCreate() {
-      // TODO: 跳转到商品创建页面
+      this.$router.push('/goods/edit')
     },
     handleUpdate(row) {
-      // TODO: 跳转到商品编辑页面
+      this.$router.push(`/goods/edit/${row.id}`)
     },
     handleDelete(row) {
       // TODO: 调用删除商品API
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    async handleBatchUpdateStatus(status) {
+      if (this.multipleSelection.length === 0) {
+        this.$message.warning('请先选择商品');
+        return;
+      }
+      
+      try {
+        await this.$confirm(`确认${status === 1 ? '上架' : '下架'}选中的商品吗?`, '提示', {
+          type: 'warning'
+        });
+        
+        const ids = this.multipleSelection.map(item => item.id);
+        await batchUpdateStatus({ ids, status });
+        this.$message.success('操作成功');
+        this.getList();
+      } catch (error) {
+        console.error('操作失败:', error);
+      }
     }
   }
 }

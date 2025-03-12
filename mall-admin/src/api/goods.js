@@ -22,7 +22,7 @@ export function addGoods(data) {
 export function updateGoods(data) {
   return request({
     url: '/api/admin/goods/update',
-    method: 'put',
+    method: 'post',
     data
   })
 }
@@ -91,7 +91,7 @@ export function deleteCategory(id) {
 
 export function getGoodsDetail(id) {
   return request({
-    url: `/goods/detail/${id}`,
+    url: `/api/admin/goods/detail/${id}`,
     method: 'get'
   })
 }

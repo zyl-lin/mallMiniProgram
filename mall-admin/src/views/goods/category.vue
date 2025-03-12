@@ -85,7 +85,7 @@ export default {
       listLoading: true,
       dialogVisible: false,
       dialogTitle: '',
-      uploadUrl: process.env.VUE_APP_BASE_API + '/admin/goods/upload-image',
+      uploadUrl: '/api/admin/category/upload-image',
       form: {
         id: undefined,
         name: '',
@@ -140,7 +140,12 @@ export default {
       }
     },
     handleUploadSuccess(res) {
-      this.form.image_url = res.url
+      if (res.code === 0) {
+        this.form.image_url = res.data.url
+        this.$message.success('图片上传成功')
+      } else {
+        this.$message.error(res.message || '上传失败')
+      }
     },
     async handleSubmit() {
       this.$refs.form.validate(async valid => {

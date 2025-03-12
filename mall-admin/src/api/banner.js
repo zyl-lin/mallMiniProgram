@@ -1,15 +1,14 @@
 import request from '@/utils/request'
 
 // 获取轮播图列表
-export function getBannerList(params) {
+export function getBannerList() {
   return request({
     url: '/api/admin/banner/list',
-    method: 'get',
-    params
+    method: 'get'
   })
 }
 
-// 新增轮播图
+// 添加轮播图
 export function addBanner(data) {
   return request({
     url: '/api/admin/banner/add',
@@ -30,17 +29,16 @@ export function updateBanner(data) {
 // 删除轮播图
 export function deleteBanner(id) {
   return request({
-    url: '/api/admin/banner/delete',
-    method: 'delete',
-    params: { id }
+    url: `/api/admin/banner/delete/${id}`,
+    method: 'delete'
   })
 }
 
-// 修改轮播图状态
+// 更新轮播图状态
 export function updateBannerStatus(data) {
   return request({
     url: '/api/admin/banner/status',
-    method: 'put',
+    method: 'post',
     data
   })
 }

@@ -49,6 +49,9 @@
             class="avatar-uploader"
             :action="uploadUrl"
             :show-file-list="false"
+            :headers="uploadHeaders"
+            :before-upload="beforeUpload"
+            :on-error="handleUploadError"
             :on-success="handleUploadSuccess">
             <img v-if="form.image_url" :src="form.image_url" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -90,7 +93,10 @@ export default {
       listLoading: true,
       dialogVisible: false,
       dialogTitle: '',
-      uploadUrl: process.env.VUE_APP_BASE_API + '/upload',
+      uploadUrl: '/api/admin/goods/upload-image',
+      uploadHeaders: {
+        Authorization: 'Bearer ' + localStorage.getItem('token')
+      },
       form: {
         id: undefined,
         image_url: '',
@@ -173,8 +179,33 @@ export default {
         row.status = row.status === 1 ? 0 : 1 // 恢复状态
       }
     },
+    beforeUpload(file) {
+      console.log('准备上传文件:', file.name, file.type, file.size)
+      const isImage = file.type.startsWith('image/');
+      const isLt5M = file.size / 1024 / 1024 < 5;
+
+      if (!isImage) {
+        this.$message.error('只能上传图片文件!');
+        return false;
+      }
+      if (!isLt5M) {
+        this.$message.error('图片大小不能超过 5MB!');
+        return false;
+      }
+      return true;
+    },
+    handleUploadError(err, file) {
+      console.error('文件上传失败:', err)
+      this.$message.error(`文件 ${file.name} 上传失败: ${err.message || '未知错误'}`)
+    },
     handleUploadSuccess(res) {
-      this.form.image_url = res.data.url
+      console.log('上传响应:', res)
+      if (res.code === 0) {
+        this.form.image_url = res.data.url // 使用完整的URL路径
+        this.$message.success('上传成功')
+      } else {
+        this.$message.error(res.msg || '上传失败')
+      }
     },
     async handleSubmit() {
       this.$refs.form.validate(async valid => {
@@ -183,7 +214,12 @@ export default {
             if (this.form.id) {
               await updateBanner(this.form)
             } else {
-              await addBanner(this.form)
+              await addBanner({
+                image_url: this.form.image_url,
+                link_url: this.form.link_url || '',
+                sort: this.form.sort || 0,
+                status: this.form.status || 1
+              })
             }
             this.$message.success('保存成功')
             this.dialogVisible = false

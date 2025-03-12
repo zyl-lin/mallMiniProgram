@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
 
 // 创建Express应用
 const app = express();
@@ -20,10 +21,16 @@ app.use(session({
   cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
+// 确保上传目录存在
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir);
+}
+
 // 静态文件服务 - 前端构建文件
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// 上传文件目录
+// 配置静态文件服务
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // API路由

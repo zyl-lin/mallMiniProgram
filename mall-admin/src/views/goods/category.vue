@@ -85,7 +85,7 @@ export default {
       listLoading: true,
       dialogVisible: false,
       dialogTitle: '',
-      uploadUrl: process.env.VUE_APP_BASE_API + '/upload',
+      uploadUrl: process.env.VUE_APP_BASE_API + '/admin/goods/upload-image',
       form: {
         id: undefined,
         name: '',

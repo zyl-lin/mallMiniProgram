@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取商品列表
 export function getGoodsList(params) {
   return request({
-    url: '/admin/goods/list',
+    url: '/api/admin/goods/list',
     method: 'get',
     params
   })
@@ -12,7 +12,7 @@ export function getGoodsList(params) {
 // 新增商品
 export function addGoods(data) {
   return request({
-    url: '/admin/goods/add',
+    url: '/api/admin/goods/add',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function addGoods(data) {
 // 更新商品
 export function updateGoods(data) {
   return request({
-    url: '/admin/goods/update',
+    url: '/api/admin/goods/update',
     method: 'put',
     data
   })
@@ -30,15 +30,25 @@ export function updateGoods(data) {
 // 删除商品
 export function deleteGoods(id) {
   return request({
-    url: `/admin/goods/delete/${id}`,
-    method: 'delete'
+    url: '/api/admin/goods/delete',
+    method: 'delete',
+    params: { id }
   })
 }
 
-// 修改商品状态
-export function changeGoodsStatus(data) {
+// 商品上下架
+export function updateGoodsStatus(data) {
   return request({
-    url: '/admin/goods/status',
+    url: '/api/admin/goods/status',
+    method: 'put',
+    data
+  })
+}
+
+// 批量上下架
+export function batchUpdateStatus(data) {
+  return request({
+    url: '/api/admin/goods/batch-status',
     method: 'put',
     data
   })

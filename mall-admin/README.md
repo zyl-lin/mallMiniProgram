@@ -175,3 +175,20 @@ NODE_ENV=development npm run dev
 # 或
 NODE_ENV=production npm run dev
 ``` 
+
+## 启动说明
+
+### 开发环境
+```bash
+npm run dev
+```
+
+### 生产环境
+```bash
+# Windows PowerShell
+$env:NODE_ENV="production"; npm run dev
+
+# 或者使用启动脚本
+./start-prod.ps1  # PowerShell
+start-prod.bat    # CMD
+``` 

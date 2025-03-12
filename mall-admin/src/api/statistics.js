@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取销售统计数据
 export function getSalesStats() {
   return request({
-    url: '/admin/stats/sales',
+    url: '/api/admin/stats/sales',
     method: 'get'
   })
 }
@@ -11,7 +11,7 @@ export function getSalesStats() {
 // 获取销售趋势数据
 export function getSalesTrend() {
   return request({
-    url: '/admin/stats/sales-trend',
+    url: '/api/admin/stats/sales-trend',
     method: 'get'
   })
 }
@@ -19,7 +19,7 @@ export function getSalesTrend() {
 // 获取热销商品数据
 export function getHotGoods() {
   return request({
-    url: '/admin/stats/hot-goods',
+    url: '/api/admin/stats/hot-goods',
     method: 'get'
   })
 }
@@ -27,7 +27,7 @@ export function getHotGoods() {
 // 获取订单统计数据
 export function getOrderStats() {
   return request({
-    url: '/admin/stats/orders',
+    url: '/api/admin/stats/orders',
     method: 'get'
   })
 }
@@ -35,7 +35,7 @@ export function getOrderStats() {
 // 获取转化率统计数据
 export function getConversionStats() {
   return request({
-    url: '/admin/stats/conversion',
+    url: '/api/admin/stats/conversion',
     method: 'get'
   })
 } 

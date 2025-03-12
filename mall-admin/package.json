@@ -6,9 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "node app.js",
-    "dev": "cross-env NODE_ENV=development node app.js",
-    "prod": "cross-env NODE_ENV=production node app.js"
+    "start": "node server.js",
+    "dev": "concurrently \"npm run serve\" \"nodemon server.js\""
   },
   "dependencies": {
     "axios": "^0.21.1",

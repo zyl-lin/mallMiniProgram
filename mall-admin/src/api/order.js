@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取订单列表
 export function getOrders(params) {
   return request({
-    url: '/orders',
+    url: '/api/admin/order/list',
     method: 'get',
     params
   })
@@ -12,25 +12,26 @@ export function getOrders(params) {
 // 获取订单详情
 export function getOrderDetail(id) {
   return request({
-    url: `/orders/${id}`,
-    method: 'get'
+    url: '/api/admin/order/detail',
+    method: 'get',
+    params: { id }
   })
 }
 
 // 修改订单状态
-export function updateOrderStatus(id, status) {
+export function updateOrderStatus(data) {
   return request({
-    url: `/orders/${id}/status`,
+    url: '/api/admin/order/status',
     method: 'put',
-    data: { status }
+    data
   })
 }
 
 // 订单发货
-export function deliverOrder(data) {
+export function shipOrder(data) {
   return request({
-    url: '/admin/order/deliver',
-    method: 'put',
+    url: '/api/admin/order/ship',
+    method: 'post',
     data
   })
 }

@@ -34,8 +34,11 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// 测试路由
-app.get('/', (req, res) => {
+// 静态文件服务
+app.use(express.static(path.join(__dirname, 'dist')))
+
+// API 路由
+app.get('/api/status', (req, res) => {
   res.json({
     message: 'Mall Admin API Server',
     env: NODE_ENV,
@@ -48,6 +51,11 @@ app.get('/', (req, res) => {
       apiUrl: config.apiUrl
     }
   })
+})
+
+// 所有其他请求返回 index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 })
 
 // 启动服务器

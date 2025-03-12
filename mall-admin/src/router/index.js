@@ -68,7 +68,8 @@ export const constantRoutes = [
         name: 'Banner',
         meta: { title: '轮播图管理', icon: 'el-icon-picture' }
       }
-    ]
+    ],
+    redirect: '/banner/index'
   },
   {
     path: '/statistics',
@@ -101,24 +102,29 @@ const router = new Router({
 
 // 全局前置守卫
 router.beforeEach(async(to, from, next) => {
+  console.log('路由跳转:', from.path, '->', to.path)
   // 获取token
   const hasToken = getToken()
 
   if (hasToken) {
     if (to.path === '/login') {
+      console.log('已登录，重定向到首页')
       // 已登录且要跳转登录页，重定向到首页
       next({ path: '/' })
     } else {
       // 判断是否已获取用户信息
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
+        console.log('用户信息已存在，直接跳转')
         next()
       } else {
         try {
+          console.log('获取用户信息')
           // 获取用户信息
           await store.dispatch('user/getInfo')
           next()
         } catch (error) {
+          console.error('获取用户信息失败:', error)
           // 获取用户信息失败，清除token并跳转登录页
           await store.dispatch('user/logout')
           next(`/login?redirect=${to.path}`)
@@ -127,9 +133,11 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
+      console.log('访问白名单路由')
       // 白名单中的路由直接放行
       next()
     } else {
+      console.log('未登录，重定向到登录页')
       // 没有token，重定向到登录页
       next(`/login?redirect=${to.path}`)
     }

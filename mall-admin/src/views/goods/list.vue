@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import { getGoodsList } from '@/api/goods'
+
 export default {
   name: 'GoodsList',
   data() {
@@ -98,12 +100,16 @@ export default {
     this.getList()
   },
   methods: {
-    getList() {
+    async getList() {
       this.listLoading = true
-      // TODO: 调用获取商品列表API
-      setTimeout(() => {
-        this.listLoading = false
-      }, 1000)
+      try {
+        const { data } = await getGoodsList(this.listQuery)
+        this.list = data.list
+        this.total = data.total
+      } catch (error) {
+        console.error('获取商品列表失败:', error)
+      }
+      this.listLoading = false
     },
     handleFilter() {
       this.listQuery.page = 1

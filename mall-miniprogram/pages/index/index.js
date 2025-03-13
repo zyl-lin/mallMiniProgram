@@ -4,7 +4,8 @@ Page({
   data: {
     banners: [],
     recommendGoods: [],
-    categories: []
+    categories: [],
+    categoriesGoods: {} // 用于存储每个分类下的商品
   },
 
   onLoad() {
@@ -51,16 +52,47 @@ Page({
   async getCategories() {
     try {
       const res = await request({
-        url: '/api/category/home'
+        url: '/api/category/list'
       })
       if (res.code === 0) {
         this.setData({
           categories: res.data
         })
+        // 获取到分类后，获取分类商品
+        this.getCategoryGoods()
       }
     } catch (error) {
-      console.error('获取分类商品失败:', error)
+      console.error('获取分类列表失败:', error)
     }
+  },
+
+  // 获取分类商品
+  async getCategoryGoods() {
+    const { categories } = this.data
+    const categoriesGoods = {}
+
+    // 遍历分类获取每个分类下的商品
+    for (const category of categories) {
+      try {
+        const res = await request({
+          url: `/api/category/${category.id}/goods`,
+          data: {
+            page: 1,
+            pageSize: 6 // 每个分类显示6个商品
+          }
+        })
+        if (res.code === 0) {
+          categoriesGoods[category.id] = res.data.goods
+        }
+      } catch (error) {
+        console.error(`获取分类${category.id}商品失败:`, error)
+      }
+    }
+    
+    // 更新数据
+    this.setData({
+      categoriesGoods
+    })
   },
 
   // 跳转到商品详情

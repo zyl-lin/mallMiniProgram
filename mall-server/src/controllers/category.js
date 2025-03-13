@@ -71,7 +71,7 @@ exports.getCategoryGoods = async (req, res) => {
 
     // 获取商品列表
     const [goods] = await db.query(
-      'SELECT * FROM goods WHERE category_id = ? AND status = 1 ORDER BY sort DESC LIMIT ? OFFSET ?',
+      'SELECT * FROM goods WHERE category_id = ? AND status = 1 ORDER BY create_time DESC LIMIT ? OFFSET ?',
       [id, parseInt(pageSize), offset]
     );
 

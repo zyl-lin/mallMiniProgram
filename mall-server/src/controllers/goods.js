@@ -19,7 +19,7 @@ exports.getList = async (req, res) => {
       params.push(`%${keyword}%`);
     }
 
-    sql += ' ORDER BY sort DESC LIMIT ? OFFSET ?';
+    sql += ' ORDER BY create_time DESC LIMIT ? OFFSET ?';
     params.push(parseInt(pageSize), offset);
 
     const [goods] = await db.query(sql, params);

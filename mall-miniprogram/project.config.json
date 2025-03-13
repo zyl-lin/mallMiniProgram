@@ -36,7 +36,11 @@
             "ignore": [],
             "disablePlugins": [],
             "outputPath": ""
-        }
+        },
+        "checkSiteMap": false,
+        "ignoreUploadUnusedFiles": true,
+        "ignoreDevUnusedFiles": true,
+        "disableUseStrict": false
     },
     "compileType": "miniprogram",
     "libVersion": "2.19.4",

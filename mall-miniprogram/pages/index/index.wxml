@@ -2,7 +2,7 @@
   <!-- 轮播图 -->
   <swiper class="banner" indicator-dots autoplay circular>
     <swiper-item wx:for="{{banners}}" wx:key="id">
-      <image src="{{item.image}}" mode="aspectFill" />
+      <image src="{{item.image_url}}" mode="aspectFill" />
     </swiper-item>
   </swiper>
 
@@ -11,7 +11,7 @@
     <view class="section-title">推荐商品</view>
     <view class="goods-list">
       <view class="goods-item" wx:for="{{recommendGoods}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
-        <image class="goods-img" src="{{item.cover}}" mode="aspectFill" />
+        <image class="goods-img" src="{{item.image_url}}" mode="aspectFill" />
         <view class="goods-info">
           <view class="goods-name">{{item.name}}</view>
           <view class="goods-price">¥{{item.price}}</view>

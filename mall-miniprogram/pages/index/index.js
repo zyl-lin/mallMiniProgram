@@ -23,6 +23,7 @@ Page({
         this.setData({
           banners: res.data
         })
+        console.log('banners:', res.data) // 确认图片URL
       }
     } catch (error) {
       console.error('获取轮播图失败:', error)
@@ -39,6 +40,7 @@ Page({
         this.setData({
           recommendGoods: res.data
         })
+        console.log('recommendGoods:', res.data) // 确认图片URL
       }
     } catch (error) {
       console.error('获取推荐商品失败:', error)

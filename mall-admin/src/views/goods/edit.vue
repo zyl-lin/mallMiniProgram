@@ -46,12 +46,19 @@
       </el-form-item>
 
       <el-form-item label="商品详情" prop="detail">
-        <el-input
-          type="textarea"
-          v-model="form.detail"
-          rows="4"
-          placeholder="请输入商品详情"
-        />
+        <div style="border: 1px solid #ccc">
+          <Toolbar
+            :editor="editor"
+            :defaultConfig="{}"
+            style="border-bottom: 1px solid #ccc"
+          />
+          <Editor
+            v-model="form.detail"
+            :defaultConfig="editorConfig"
+            style="height: 500px; overflow-y: hidden;"
+            @onCreated="handleEditorCreated"
+          />
+        </div>
       </el-form-item>
 
       <el-form-item label="上架状态" prop="status">
@@ -73,9 +80,12 @@
 <script>
 import { addGoods, updateGoods, getGoodsDetail } from '@/api/goods'
 import { getCategoryList } from '@/api/category'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css'
 
 export default {
   name: 'GoodsEdit',
+  components: { Editor, Toolbar },
   data() {
     return {
       form: {
@@ -105,7 +115,38 @@ export default {
         ]
       },
       categories: [],
-      uploadUrl: '/api/admin/goods/upload-image'
+      uploadUrl: '/api/admin/goods/upload-image',
+      editor: null,
+      editorConfig: {
+        placeholder: '请输入商品详情',
+        MENU_CONF: {
+          uploadImage: {
+            server: '/api/admin/goods/upload-image',
+            fieldName: 'file',
+            maxFileSize: 5 * 1024 * 1024, // 5MB
+            maxNumberOfFiles: 5,
+            allowedFileTypes: ['image/jpeg', 'image/png'],
+            headers: {
+              'Authorization': `Bearer ${this.$store.getters.token}`
+            },
+            customInsert(res, insertFn) {
+              if (res.code === 0) {
+                insertFn(res.data.url)
+              } else {
+                throw new Error(res.message || '上传失败')
+              }
+            },
+            onFailed(file, res) {
+              console.error('图片上传失败', res)
+              throw new Error('上传失败')
+            },
+            onError(file, err, res) {
+              console.error('图片上传出错', err, res)
+              throw new Error('上传出错')
+            }
+          }
+        }
+      }
     }
   },
   created() {
@@ -157,6 +198,14 @@ export default {
         this.$message.error('图片大小不能超过 2MB!')
       }
       return isImage && isLt2M
+    },
+    handleEditorCreated(editor) {
+      this.editor = editor
+    },
+    beforeDestroy() {
+      if (this.editor) {
+        this.editor.destroy()
+      }
     },
     async handleSubmit() {
       this.$refs.form.validate(async valid => {

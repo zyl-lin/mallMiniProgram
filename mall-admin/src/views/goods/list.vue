@@ -12,7 +12,9 @@
         <el-option label="下架" value="0" />
       </el-select>
       <el-button type="primary" @click="handleFilter">查询</el-button>
-      <el-button type="primary" @click="handleCreate">添加商品</el-button>
+      <el-button type="success" @click="handleCreate">添加商品</el-button>
+      <el-button type="warning" @click="handleBatchUpdateStatus(1)">批量上架</el-button>
+      <el-button type="danger" @click="handleBatchUpdateStatus(0)">批量下架</el-button>
     </div>
 
     <el-table
@@ -77,9 +79,6 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-
-    <el-button type="primary" @click="handleBatchUpdateStatus(1)">批量上架</el-button>
-    <el-button type="primary" @click="handleBatchUpdateStatus(0)">批量下架</el-button>
   </div>
 </template>
 

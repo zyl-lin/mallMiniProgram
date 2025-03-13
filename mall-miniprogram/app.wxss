@@ -1,0 +1,11 @@
+/**app.wxss**/
+page {
+  background-color: #f7f7f7;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.container {
+  padding: 20rpx;
+} 

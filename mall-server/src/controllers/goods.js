@@ -100,7 +100,7 @@ exports.getRecommend = async (req, res) => {
   try {
     const { limit = 10 } = req.query;
     const [goods] = await db.query(
-      'SELECT * FROM goods WHERE status = 1 AND is_recommend = 1 ORDER BY sort DESC LIMIT ?',
+      'SELECT * FROM goods WHERE status = 1 AND is_recommend = 1 ORDER BY id DESC LIMIT ?',
       [parseInt(limit)]
     );
 

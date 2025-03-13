@@ -102,4 +102,22 @@ export function createGoods(data) {
     method: 'post',
     data
   })
+}
+
+// 更新商品推荐状态
+export function updateGoodsRecommend(data) {
+  return request({
+    url: '/api/admin/goods/recommend',
+    method: 'put',
+    data
+  })
+}
+
+// 批量更新推荐状态
+export function batchUpdateRecommend(data) {
+  return request({
+    url: '/api/admin/goods/batch-recommend',
+    method: 'put',
+    data
+  })
 } 

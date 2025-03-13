@@ -33,28 +33,15 @@ exports.getList = async (req, res) => {
 // 获取首页分类
 exports.getHomeCategories = async (req, res) => {
   try {
-    // 获取启用状态的一级分类
+    const { limit = 10 } = req.query;
     const [categories] = await db.query(
-      'SELECT * FROM category WHERE level = 1 AND status = 1 ORDER BY sort ASC LIMIT 10'
-    );
-
-    // 获取每个分类下的商品
-    const result = await Promise.all(
-      categories.map(async category => {
-        const [goods] = await db.query(
-          'SELECT * FROM goods WHERE category_id = ? AND status = 1 ORDER BY sort DESC LIMIT 4',
-          [category.id]
-        );
-        return {
-          ...category,
-          goods
-        };
-      })
+      'SELECT * FROM category ORDER BY sort DESC LIMIT ?',
+      [parseInt(limit)]
     );
 
     res.json({
       code: 0,
-      data: result,
+      data: categories,
       message: '获取成功'
     });
   } catch (error) {

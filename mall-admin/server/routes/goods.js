@@ -139,7 +139,7 @@ router.get('/detail/:id', async (req, res) => {
 // 更新商品
 router.post('/update', async (req, res) => {
   try {
-    const {
+    const { 
       id,
       name,
       category_id,
@@ -147,15 +147,16 @@ router.post('/update', async (req, res) => {
       stock,
       image_url,
       detail,
-      status
+      status,
+      is_recommend // 确保接收推荐状态
     } = req.body;
 
     await db.query(
       `UPDATE goods 
        SET name = ?, category_id = ?, price = ?, stock = ?, 
-           image_url = ?, detail = ?, status = ?, update_time = NOW()
+           image_url = ?, detail = ?, status = ?, is_recommend = ?, update_time = NOW()
        WHERE id = ?`,
-      [name, category_id, price, stock, image_url, detail, status, id]
+      [name, category_id, price, stock, image_url, detail, status, is_recommend, id]
     );
 
     res.json({
@@ -217,6 +218,29 @@ router.put('/batch-status', async (req, res) => {
     res.json({
       code: 500,
       message: '批量更新状态失败'
+    });
+  }
+});
+
+// 更新商品推荐状态
+router.put('/recommend', async (req, res) => {
+  try {
+    const { id, is_recommend } = req.body;
+    
+    await db.query(
+      'UPDATE goods SET is_recommend = ? WHERE id = ?',
+      [is_recommend, id]
+    );
+
+    res.json({
+      code: 0,
+      message: '更新成功'
+    });
+  } catch (error) {
+    console.error('更新推荐状态失败:', error);
+    res.json({
+      code: 500,
+      message: '更新推荐状态失败'
     });
   }
 });

@@ -1,0 +1,34 @@
+<view class="container">
+  <view class="cart-list">
+    <view class="cart-item" wx:for="{{cartList}}" wx:key="id">
+      <view class="checkbox" bindtap="selectGoods" data-id="{{item.id}}">
+        <image src="/assets/images/{{item.selected ? 'checked' : 'unchecked'}}.png" mode="aspectFit" />
+      </view>
+      <image class="goods-img" src="{{item.cover}}" mode="aspectFill" />
+      <view class="goods-info">
+        <view class="goods-name">{{item.name}}</view>
+        <view class="goods-price">¥{{item.price}}</view>
+        <view class="quantity">
+          <view class="minus" bindtap="updateQuantity" data-id="{{item.id}}" data-quantity="{{item.quantity - 1}}">-</view>
+          <view class="number">{{item.quantity}}</view>
+          <view class="plus" bindtap="updateQuantity" data-id="{{item.id}}" data-quantity="{{item.quantity + 1}}">+</view>
+        </view>
+      </view>
+      <view class="delete" bindtap="deleteGoods" data-id="{{item.id}}">
+        <image src="/assets/images/delete.png" mode="aspectFit" />
+      </view>
+    </view>
+  </view>
+
+  <view class="footer">
+    <view class="checkbox" bindtap="selectAll">
+      <image src="/assets/images/{{selectedAll ? 'checked' : 'unchecked'}}.png" mode="aspectFit" />
+      <text>全选</text>
+    </view>
+    <view class="total">
+      <text>合计：</text>
+      <text class="price">¥{{totalPrice}}</text>
+    </view>
+    <view class="settlement" bindtap="settlement">结算</view>
+  </view>
+</view> 

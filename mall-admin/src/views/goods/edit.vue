@@ -69,6 +69,14 @@
         />
       </el-form-item>
 
+      <el-form-item label="推荐商品" prop="is_recommend">
+        <el-switch
+          v-model="form.is_recommend"
+          :active-value="1"
+          :inactive-value="0"
+        />
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="handleSubmit">保存</el-button>
         <el-button @click="$router.back()">取消</el-button>
@@ -95,7 +103,8 @@ export default {
         stock: 0,
         image_url: '',
         detail: '',
-        status: 1
+        status: 1,
+        is_recommend: 0
       },
       rules: {
         name: [
@@ -211,19 +220,26 @@ export default {
       this.$refs.form.validate(async valid => {
         if (valid) {
           try {
+            console.log('提交数据:', this.form);
+            const formData = {
+              ...this.form,
+              is_recommend: this.form.is_recommend ? 1 : 0
+            };
             if (this.form.id) {
-              await updateGoods(this.form)
+              const res = await updateGoods(formData);
+              console.log('更新结果:', res);
             } else {
-              await addGoods(this.form)
+              const res = await addGoods(formData);
+              console.log('添加结果:', res);
             }
-            this.$message.success('保存成功')
-            this.$router.push('/goods/list')
+            this.$message.success('保存成功');
+            this.$router.push('/goods/list');
           } catch (error) {
-            console.error('保存商品失败:', error)
-            this.$message.error('保存失败')
+            console.error('保存商品失败:', error);
+            this.$message.error('保存失败');
           }
         }
-      })
+      });
     }
   }
 }

@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dev": "node app.js",
+    "dev:development": "cross-env NODE_ENV=development node app.js",
+    "dev:production": "cross-env NODE_ENV=production node app.js"
+  }
+} 

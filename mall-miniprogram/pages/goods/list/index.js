@@ -65,6 +65,23 @@ Page({
 
   // 添加到购物车
   async addToCart(e) {
+    // 检查是否已登录
+    const { checkLogin } = require('../../../utils/auth.js')
+    if (!checkLogin()) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/index'
+            })
+          }
+        }
+      })
+      return
+    }
+
     const { id } = e.currentTarget.dataset
     try {
       const res = await request({

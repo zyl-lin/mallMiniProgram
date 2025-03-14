@@ -1,23 +1,14 @@
-<view class="container">
-  <view class="login-form">
-    <view class="form-item">
-      <input 
-        type="number" 
-        placeholder="请输入手机号" 
-        value="{{phone}}"
-        bindinput="onPhoneInput"
-      />
-    </view>
-    <view class="form-item">
-      <input 
-        type="password" 
-        placeholder="请输入密码" 
-        value="{{password}}"
-        bindinput="onPasswordInput"
-      />
-    </view>
-    <view class="form-item">
-      <button class="login-btn" bindtap="login">登录</button>
-    </view>
+<view class="login-container">
+  <view class="avatar-container">
+    <image class="default-avatar" src="/assets/images/default-avatar.png" mode="aspectFit"></image>
   </view>
+  
+  <view class="login-tips">
+    <text>申请获取以下权限</text>
+    <text class="sub-tips">获得您的公开信息(昵称、头像等)</text>
+  </view>
+
+  <button class="login-btn" type="primary" bindtap="getUserProfile">
+    微信一键登录
+  </button>
 </view> 

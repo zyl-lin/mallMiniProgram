@@ -1,10 +1,15 @@
 App({
   onLaunch() {
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
+    // 获取本地存储的用户信息
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      this.globalData.userInfo = userInfo
+    }
+    
+    // 执行静默登录
+    const { silentLogin } = require('./utils/auth.js')
+    silentLogin().catch(err => {
+      console.log('静默登录失败:', err)
     })
   },
   globalData: {

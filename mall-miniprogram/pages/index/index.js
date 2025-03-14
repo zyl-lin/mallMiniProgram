@@ -1,4 +1,5 @@
 const { request } = require('../../utils/request')
+const { checkLogin, silentLogin } = require('../../utils/auth.js')
 
 Page({
   data: {
@@ -106,8 +107,7 @@ Page({
   // 添加到购物车
   async addToCart(e) {
     // 检查是否已登录
-    const token = wx.getStorageSync('token')
-    if (!token) {
+    if (!checkLogin()) {
       wx.showModal({
         title: '提示',
         content: '请先登录',
@@ -140,24 +140,27 @@ Page({
       }
     } catch (error) {
       console.error('添加购物车失败:', error)
-      if (error.statusCode === 401) {
-        wx.showModal({
-          title: '提示',
-          content: '请先登录',
-          success: (res) => {
-            if (res.confirm) {
-              wx.navigateTo({
-                url: '/pages/login/index'
-              })
-            }
-          }
-        })
-      } else {
+      wx.showToast({
+        title: '添加失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 需要登录才能操作的函数
+  async someNeedLoginFunction() {
+    if (!checkLogin()) {
+      try {
+        await silentLogin()
+      } catch (err) {
         wx.showToast({
-          title: '添加失败',
+          title: '请先登录',
           icon: 'none'
         })
+        return
       }
     }
+    
+    // 继续执行需要登录的操作
   }
 }) 

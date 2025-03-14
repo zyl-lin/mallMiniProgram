@@ -52,47 +52,39 @@ Page({
   async getCategories() {
     try {
       const res = await request({
-        url: '/api/category/list'
+        url: '/api/category/home'
       })
       if (res.code === 0) {
         this.setData({
           categories: res.data
         })
-        // 获取到分类后，获取分类商品
-        this.getCategoryGoods()
+        
+        // 获取每个分类的商品
+        for (const category of res.data) {
+          try {
+            const goodsRes = await request({
+              url: `/api/category/${category.id}/goods`,
+              data: {
+                page: 1,
+                pageSize: 3 // 每个分类只显示3个商品
+              }
+            })
+            
+            if (goodsRes.code === 0) {
+              // 使用setData更新特定分类的商品
+              this.setData({
+                [`categoriesGoods.${category.id}`]: goodsRes.data.goods
+              })
+              console.log(`分类${category.id}商品:`, goodsRes.data.goods) // 调试日志
+            }
+          } catch (error) {
+            console.error(`获取分类${category.id}商品失败:`, error)
+          }
+        }
       }
     } catch (error) {
       console.error('获取分类列表失败:', error)
     }
-  },
-
-  // 获取分类商品
-  async getCategoryGoods() {
-    const { categories } = this.data
-    const categoriesGoods = {}
-
-    // 遍历分类获取每个分类下的商品
-    for (const category of categories) {
-      try {
-        const res = await request({
-          url: `/api/category/${category.id}/goods`,
-          data: {
-            page: 1,
-            pageSize: 6 // 每个分类显示6个商品
-          }
-        })
-        if (res.code === 0) {
-          categoriesGoods[category.id] = res.data.goods
-        }
-      } catch (error) {
-        console.error(`获取分类${category.id}商品失败:`, error)
-      }
-    }
-    
-    // 更新数据
-    this.setData({
-      categoriesGoods
-    })
   },
 
   // 跳转到商品详情

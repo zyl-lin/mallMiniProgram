@@ -33,15 +33,16 @@
       <view 
         class="goods-item" 
         wx:for="{{categoriesGoods[item.id]}}" 
+        wx:for-item="goods"
         wx:key="id" 
         bindtap="goToDetail" 
-        data-id="{{item.id}}"
+        data-id="{{goods.id}}"
       >
-        <image class="goods-img" src="{{item.image_url}}" mode="aspectFill" />
+        <image class="goods-img" src="{{goods.image_url}}" mode="aspectFill" />
         <view class="goods-info">
-          <view class="goods-name">{{item.name}}</view>
-          <view class="goods-price">¥{{item.price}}</view>
-          <view class="add-cart" catchtap="addToCart" data-id="{{item.id}}">
+          <view class="goods-name">{{goods.name}}</view>
+          <view class="goods-price">¥{{goods.price}}</view>
+          <view class="add-cart" catchtap="addToCart" data-id="{{goods.id}}">
             <image src="/assets/images/cart-add.png" mode="aspectFit" />
           </view>
         </view>

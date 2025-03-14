@@ -25,17 +25,53 @@ Page({
       })
       return
     }
+
+    // 检查图片资源是否存在
+    try {
+      wx.getImageInfo({
+        src: '/assets/images/checked.png',
+        success: () => {
+          console.log('选中图片资源加载成功')
+        },
+        fail: (error) => {
+          console.error('选中图片资源加载失败:', error)
+        }
+      })
+      wx.getImageInfo({
+        src: '/assets/images/unchecked.png',
+        success: () => {
+          console.log('未选中图片资源加载成功')
+        },
+        fail: (error) => {
+          console.error('未选中图片资源加载失败:', error)
+        }
+      })
+    } catch (error) {
+      console.error('图片资源检查失败:', error)
+    }
+
     this.getCartList()
   },
 
   // 获取购物车列表
   async getCartList() {
+    console.log('=== 获取购物车列表 ===')
     this.setData({ loading: true })
     try {
+      // 打印请求前的token
+      const token = wx.getStorageSync('token')
+      console.log('请求头Token:', token)
+
       const res = await request({
         url: '/api/cart/list'
       })
-      console.log('购物车列表数据:', res) // 添加调试日志
+      
+      console.log('购物车列表请求结果:', {
+        statusCode: res.statusCode,
+        data: res.data,
+        headers: res.header
+      })
+
       if (res.code === 0) {
         this.setData({
           cartList: res.data.list.map(item => ({
@@ -49,6 +85,10 @@ Page({
       }
     } catch (error) {
       console.error('获取购物车列表失败:', error)
+      // 打印更详细的错误信息
+      if(error.response) {
+        console.error('错误响应:', error.response)
+      }
       this.setData({ loading: false })
       wx.showToast({
         title: '获取购物车列表失败',

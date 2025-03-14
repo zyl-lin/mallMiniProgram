@@ -214,7 +214,7 @@ exports.getDetail = async (req, res) => {
 
     // 获取订单商品
     const [goods] = await db.query(
-      `SELECT og.*, g.name, g.cover, g.price as current_price
+      `SELECT og.*, g.name, g.image_url, g.price as current_price
        FROM order_goods og
        LEFT JOIN goods g ON og.goods_id = g.id
        WHERE og.order_id = ?`,

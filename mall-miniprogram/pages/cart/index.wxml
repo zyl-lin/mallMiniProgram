@@ -15,7 +15,10 @@
   <view class="cart-list" wx:else>
     <view class="cart-item" wx:for="{{cartList}}" wx:key="id">
       <view class="checkbox" bindtap="selectGoods" data-id="{{item.id}}">
-        <image src="/assets/images/{{item.selected ? 'checked.png' : 'unchecked.png'}}" mode="aspectFit"/>
+        <image 
+          src="{{item.selected ? '../../assets/images/checked.png' : '../../assets/images/unchecked.png'}}" 
+          mode="aspectFit"
+        />
       </view>
       <image class="goods-img" src="{{item.image_url}}" mode="aspectFill"/>
       <view class="goods-info">
@@ -35,7 +38,10 @@
 
   <view class="footer" wx:if="{{cartList.length}}">
     <view class="select-all" bindtap="selectAll">
-      <image src="/assets/images/{{selectedAll ? 'checked.png' : 'unchecked.png'}}" mode="aspectFit"/>
+      <image 
+        src="{{selectedAll ? '../../assets/images/checked.png' : '../../assets/images/unchecked.png'}}" 
+        mode="aspectFit"
+      />
       <text>全选</text>
     </view>
     <view class="total-wrapper">

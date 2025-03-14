@@ -5,7 +5,7 @@ exports.getList = async (req, res) => {
   try {
     const userId = req.userId;
     const [rows] = await db.query(
-      `SELECT c.*, g.name, g.cover, g.price, g.stock 
+      `SELECT c.*, g.name, g.image_url, g.price, g.stock 
        FROM cart c 
        LEFT JOIN goods g ON c.goods_id = g.id 
        WHERE c.user_id = ? AND g.status = 1 

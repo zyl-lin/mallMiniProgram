@@ -17,6 +17,14 @@ const formatImageUrl = (url) => {
 const request = (options) => {
   // 获取token
   const token = wx.getStorageSync('token')
+  console.log('=== API请求 ===')
+  console.log('请求地址:', options.url)
+  console.log('请求方法:', options.method || 'GET')
+  console.log('请求头:', {
+    'content-type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+  })
+  console.log('请求数据:', options.data)
   
   return new Promise((resolve, reject) => {
     wx.request({
@@ -28,6 +36,13 @@ const request = (options) => {
         ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       },
       success: (res) => {
+        console.log('响应数据:', res.data)
+        if (res.statusCode !== 200) {
+          console.error('请求失败:', res)
+          reject(res)
+          return
+        }
+        
         if (res.data.code === 401) {
           // token过期，清除本地存储并跳转到登录页
           wx.removeStorageSync('token')
@@ -37,26 +52,24 @@ const request = (options) => {
           })
           reject(res.data)
         } else {
-          if (res.statusCode === 200) {
-            // 格式化图片URL
-            if (res.data && Array.isArray(res.data.data)) {
-              res.data.data = res.data.data.map(item => {
-                if (item.image_url) {
-                  item.image_url = formatImageUrl(item.image_url)
-                }
-                if (item.cover) {
-                  item.cover = formatImageUrl(item.cover)
-                }
-                return item
-              })
-            }
-            resolve(res.data)
-          } else {
-            reject(res)
+          if (res.data && Array.isArray(res.data.data)) {
+            res.data.data = res.data.data.map(item => {
+              if (item.image_url) {
+                item.image_url = formatImageUrl(item.image_url)
+              }
+              if (item.cover) {
+                item.cover = formatImageUrl(item.cover)
+              }
+              return item
+            })
           }
+          resolve(res.data)
         }
       },
-      fail: reject
+      fail: (err) => {
+        console.error('请求失败:', err)
+        reject(err)
+      }
     })
   })
 }

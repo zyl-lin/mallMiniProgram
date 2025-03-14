@@ -13,12 +13,12 @@ router.get('/list', cartController.getList);
 router.post('/add', cartController.add);
 
 // 更新购物车商品数量
-router.put('/quantity', cartController.updateQuantity);
+router.post('/update', cartController.updateQuantity);
 
 // 删除购物车商品
 router.post('/delete', cartController.delete);
 
 // 更新商品选中状态
-router.put('/selected', cartController.updateSelected);
+router.post('/selected', cartController.updateSelected);
 
 module.exports = router; 

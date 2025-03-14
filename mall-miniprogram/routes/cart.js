@@ -59,22 +59,30 @@ router.post('/add', auth, async (req, res) => {
 router.get('/list', auth, async (req, res) => {
   try {
     const { userId } = req.user
-    console.log('获取购物车列表, userId:', userId) // 添加调试日志
+    console.log('=== 获取购物车列表 ===')
+    console.log('用户ID:', userId)
 
-    // 添加数据库连接状态检查
+    // 检查数据库连接
     if (!db) {
       throw new Error('数据库连接失败')
     }
 
-    const [cartList] = await db.query(
-      `SELECT c.id, c.quantity, c.selected, 
-        g.id as goods_id, g.name, g.price, g.image_url
-      FROM cart c
-      LEFT JOIN goods g ON c.goods_id = g.id
-      WHERE c.user_id = ?`,
-      [userId]
-    )
-    console.log('查询到的购物车数据:', cartList) // 添加调试日志
+    // 添加错误处理的数据库查询
+    let cartList
+    try {
+      [cartList] = await db.query(
+        `SELECT c.id, c.quantity, c.selected, 
+          g.id as goods_id, g.name, g.price, g.image_url
+        FROM cart c
+        LEFT JOIN goods g ON c.goods_id = g.id
+        WHERE c.user_id = ?`,
+        [userId]
+      )
+      console.log('查询到的购物车数据:', cartList)
+    } catch (dbError) {
+      console.error('数据库查询错误:', dbError)
+      throw new Error('数据库查询失败: ' + dbError.message)
+    }
 
     // 确保返回的是空数组而不是null
     const list = cartList || []
@@ -91,9 +99,55 @@ router.get('/list', auth, async (req, res) => {
     })
   } catch (err) {
     console.error('获取购物车列表失败:', err)
-    res.status(200).json({
+    res.status(500).json({
       code: 1,
       msg: '获取失败: ' + err.message
+    })
+  }
+})
+
+// 在现有代码中添加更新购物车商品数量的接口
+router.post('/update', auth, async (req, res) => {
+  try {
+    const { userId } = req.user
+    const { id, quantity } = req.body
+
+    // 验证数量是否合法
+    if (quantity < 1) {
+      return res.json({
+        code: 1,
+        msg: '商品数量不能小于1'
+      })
+    }
+
+    // 检查购物车商品是否存在
+    const [cartItems] = await db.query(
+      'SELECT * FROM cart WHERE id = ? AND user_id = ?',
+      [id, userId]
+    )
+
+    if (cartItems.length === 0) {
+      return res.json({
+        code: 1,
+        msg: '购物车商品不存在'
+      })
+    }
+
+    // 更新商品数量
+    await db.query(
+      'UPDATE cart SET quantity = ? WHERE id = ? AND user_id = ?',
+      [quantity, id, userId]
+    )
+
+    res.json({
+      code: 0,
+      msg: '更新成功'
+    })
+  } catch (err) {
+    console.error('更新购物车商品数量失败:', err)
+    res.json({
+      code: 1,
+      msg: '更新失败'
     })
   }
 })

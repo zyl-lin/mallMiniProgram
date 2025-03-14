@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="goods-list">
+    <view class="goods-item" 
+      wx:for="{{goodsList}}" 
+      wx:key="id" 
+      bindtap="goToDetail" 
+      data-id="{{item.id}}"
+    >
+      <image class="goods-img" src="{{item.image_url}}" mode="aspectFill" />
+      <view class="goods-info">
+        <view class="goods-name">{{item.name}}</view>
+        <view class="goods-price">¥{{item.price}}</view>
+        <view class="add-cart" catchtap="addToCart" data-id="{{item.id}}">
+          <image src="/assets/images/cart-add.png" mode="aspectFit" />
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="loading" wx:if="{{hasMore}}">正在加载更多...</view>
+  <view class="no-more" wx:else>没有更多了</view>
+</view> 

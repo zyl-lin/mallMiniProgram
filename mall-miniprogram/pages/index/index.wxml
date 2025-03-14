@@ -25,9 +25,9 @@
 
   <!-- 分类商品 -->
   <view class="section" wx:for="{{categories}}" wx:key="id">
-    <view class="section-title" bindtap="goToCategoryGoods" data-id="{{item.id}}">
+    <view class="section-title" bindtap="goToCategoryGoods" data-id="{{item.id}}" data-name="{{item.name}}">
       {{item.name}}
-      <text class="more">></text>
+      <text class="more">更多 ></text>
     </view>
     <view class="goods-list">
       <view 

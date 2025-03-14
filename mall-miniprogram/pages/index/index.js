@@ -97,9 +97,67 @@ Page({
 
   // 跳转到分类商品列表
   goToCategoryGoods(e) {
-    const { id } = e.currentTarget.dataset
+    const { id, name } = e.currentTarget.dataset
     wx.navigateTo({
-      url: `/pages/goods/list/index?categoryId=${id}`
+      url: `/pages/goods/list/index?categoryId=${id}&categoryName=${name}`
     })
+  },
+
+  // 添加到购物车
+  async addToCart(e) {
+    // 检查是否已登录
+    const token = wx.getStorageSync('token')
+    if (!token) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/index'
+            })
+          }
+        }
+      })
+      return
+    }
+
+    const { id } = e.currentTarget.dataset
+    try {
+      const res = await request({
+        url: '/api/cart/add',
+        method: 'POST',
+        data: {
+          goodsId: id,
+          quantity: 1
+        }
+      })
+      if (res.code === 0) {
+        wx.showToast({
+          title: '添加成功',
+          icon: 'success'
+        })
+      }
+    } catch (error) {
+      console.error('添加购物车失败:', error)
+      if (error.statusCode === 401) {
+        wx.showModal({
+          title: '提示',
+          content: '请先登录',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: '/pages/login/index'
+              })
+            }
+          }
+        })
+      } else {
+        wx.showToast({
+          title: '添加失败',
+          icon: 'none'
+        })
+      }
+    }
   }
 }) 

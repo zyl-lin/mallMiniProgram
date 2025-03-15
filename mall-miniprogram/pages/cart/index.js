@@ -211,7 +211,7 @@ Page({
   },
 
   // 结算
-  settlement() {
+  async settlement() {
     const selectedGoods = this.data.cartList.filter(item => item.selected)
     if (selectedGoods.length === 0) {
       wx.showToast({
@@ -228,9 +228,125 @@ Page({
       })
       return
     }
-    
-    wx.navigateTo({
-      url: '/pages/order/create/index'
+
+    wx.showLoading({
+      title: '正在创建订单...'
     })
+
+    try {
+      // 创建订单
+      console.log('创建订单参数:', {
+        addressId: this.data.selectedAddress.id,
+        goods: selectedGoods.map(item => ({
+          goodsId: item.id,
+          quantity: item.quantity
+        }))
+      })
+
+      const res = await request({
+        url: '/api/order/create',
+        method: 'POST',
+        data: {
+          addressId: this.data.selectedAddress.id,
+          goods: selectedGoods.map(item => ({
+            goodsId: item.id,
+            quantity: item.quantity
+          }))
+        }
+      })
+
+      console.log('创建订单响应:', res)
+
+      if (res.code === 0 && res.data && res.data.orderNo) {
+        wx.showLoading({
+          title: '正在发起支付...'
+        })
+
+        // 调用支付接口
+        const payRes = await request({
+          url: '/api/order/pay',
+          method: 'POST',
+          data: {
+            orderId: res.data.orderNo
+          }
+        })
+
+        console.log('支付接口响应:', payRes)
+
+        if (payRes.code === 0) {
+          // 由于是测试环境，直接模拟支付成功
+          wx.hideLoading()
+          
+          // 支付成功后清空购物车中已购买的商品
+          const goodsIds = selectedGoods.map(item => item.id)
+          this.removeFromCart(goodsIds)
+          
+          wx.showToast({
+            title: '支付成功',
+            icon: 'success'
+          })
+
+          // 跳转到订单列表页
+          setTimeout(() => {
+            wx.navigateTo({
+              url: '/pages/order/list/index'
+            })
+          }, 1500)
+        } else {
+          throw new Error(payRes.msg || '支付失败')
+        }
+      } else {
+        throw new Error(res.msg || '创建订单失败')
+      }
+    } catch (error) {
+      console.error('结算失败:', error)
+      wx.hideLoading()
+      wx.showToast({
+        title: error.message || '结算失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // 从购物车移除商品
+  async removeFromCart(goodsIds) {
+    try {
+      // 调用后端接口删除商品
+      const res = await request({
+        url: '/api/cart/delete',
+        method: 'POST',
+        data: {
+          ids: goodsIds
+        }
+      })
+
+      if (res.code === 0) {
+        // 更新购物车列表
+        this.setData({
+          cartList: this.data.cartList.filter(item => !goodsIds.includes(item.id)),
+          selectedAll: false  // 重置全选状态
+        })
+
+        // 重新计算总价
+        const totalPrice = this.data.cartList.reduce((total, item) => {
+          if (item.selected) {
+            return total + (item.price * item.quantity)
+          }
+          return total
+        }, 0)
+
+        this.setData({ totalPrice })
+
+        console.log('购物车商品删除成功:', goodsIds)
+      } else {
+        throw new Error(res.msg || '删除商品失败')
+      }
+    } catch (error) {
+      console.error('清空购物车失败:', error)
+      wx.showToast({
+        title: '清空购物车失败',
+        icon: 'none'
+      })
+    }
   }
 }) 

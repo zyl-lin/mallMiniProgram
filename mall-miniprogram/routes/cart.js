@@ -152,4 +152,37 @@ router.post('/update', auth, async (req, res) => {
   }
 })
 
+// 在现有代码中添加删除购物车商品的接口
+router.post('/delete', auth, async (req, res) => {
+  try {
+    const { userId } = req.user
+    const { ids } = req.body // 支持批量删除，接收商品ID数组
+
+    // 验证参数
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.json({
+        code: 1,
+        msg: '参数错误'
+      })
+    }
+
+    // 删除购物车商品
+    await db.query(
+      'DELETE FROM cart WHERE user_id = ? AND id IN (?)',
+      [userId, ids]
+    )
+
+    res.json({
+      code: 0,
+      msg: '删除成功'
+    })
+  } catch (err) {
+    console.error('删除购物车商品失败:', err)
+    res.json({
+      code: 1,
+      msg: '删除失败'
+    })
+  }
+})
+
 module.exports = router 

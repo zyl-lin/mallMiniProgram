@@ -1,10 +1,14 @@
 <view class="container">
   <view class="tabs">
-    <view class="tab-item {{currentTab == 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">全部</view>
-    <view class="tab-item {{currentTab == 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">待付款</view>
-    <view class="tab-item {{currentTab == 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2">待发货</view>
-    <view class="tab-item {{currentTab == 3 ? 'active' : ''}}" bindtap="switchTab" data-index="3">待收货</view>
-    <view class="tab-item {{currentTab == 4 ? 'active' : ''}}" bindtap="switchTab" data-index="4">已完成</view>
+    <view 
+      wx:for="{{tabs}}" 
+      wx:key="id" 
+      class="tab-item {{currentTab === index ? 'active' : ''}}"
+      data-index="{{index}}"
+      bindtap="switchTab"
+    >
+      {{item.name}}
+    </view>
   </view>
 
   <scroll-view scroll-y class="order-list">

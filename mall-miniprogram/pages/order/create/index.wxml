@@ -1,0 +1,60 @@
+<view class="container">
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <block wx:else>
+    <!-- 收货地址 -->
+    <view class="address-section" bindtap="goToAddress">
+      <view class="address-content" wx:if="{{address}}">
+        <view class="address-info">
+          <view class="user-info">
+            <text class="name">{{address.receiver_name}}</text>
+            <text class="phone">{{address.receiver_phone}}</text>
+          </view>
+          <view class="address-text">{{address.province}}{{address.city}}{{address.district}}{{address.detail_address}}</view>
+        </view>
+        <view class="address-arrow">
+          <image src="/assets/images/arrow-right.png" mode="aspectFit"/>
+        </view>
+      </view>
+      <view class="no-address" wx:else>
+        <text>请选择收货地址</text>
+        <view class="address-arrow">
+          <image src="/assets/images/arrow-right.png" mode="aspectFit"/>
+        </view>
+      </view>
+    </view>
+
+    <!-- 商品列表 -->
+    <view class="goods-list">
+      <view class="goods-item" wx:for="{{goodsList}}" wx:key="id">
+        <image class="goods-img" src="{{item.image_url}}" mode="aspectFill"/>
+        <view class="goods-info">
+          <view class="goods-name">{{item.name}}</view>
+          <view class="goods-price-wrap">
+            <text class="goods-price">¥{{item.price}}</text>
+            <text class="goods-count">x{{item.quantity}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单信息 -->
+    <view class="order-info">
+      <view class="info-item">
+        <text>共{{totalCount}}件商品</text>
+        <view class="total-wrap">
+          <text>合计：</text>
+          <text class="total-price">¥{{totalPrice}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 底部提交按钮 -->
+  <view class="footer">
+    <view class="submit-btn" bindtap="submitOrder">提交订单</view>
+  </view>
+</view> 

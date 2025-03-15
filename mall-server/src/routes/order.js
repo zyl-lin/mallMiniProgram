@@ -21,4 +21,11 @@ router.post('/cancel/:id', orderController.cancel);
 // 确认收货
 router.post('/confirm/:id', orderController.confirm);
 
+// 支付订单
+router.post('/pay', orderController.pay);
+router.post('/pay/:id', orderController.pay);
+
+// 支付结果通知
+router.post('/pay/notify', orderController.payNotify);
+
 module.exports = router; 

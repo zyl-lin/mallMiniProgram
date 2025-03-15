@@ -54,9 +54,7 @@
             <view class="quantity-btn" bindtap="updateQuantity" data-id="{{item.id}}" data-quantity="{{item.quantity + 1}}">+</view>
           </view>
         </view>
-        <view class="delete-btn" bindtap="deleteGoods" data-id="{{item.id}}">
-          <image src="/assets/images/delete.png" mode="aspectFit"/>
-        </view>
+        <view class="delete-btn" bindtap="deleteGoods" data-id="{{item.id}}">×</view>
       </view>
     </view>
   </block>

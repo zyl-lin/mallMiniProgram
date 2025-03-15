@@ -10,5 +10,13 @@ module.exports = {
   jwt: {
     secret: process.env.JWT_SECRET || 'your-secret-key',
     expiresIn: '24h'
+  },
+  wxpay: {
+    appId: process.env.WX_APP_ID,
+    mchId: process.env.WX_MCH_ID,
+    apiKey: process.env.WX_API_KEY,
+    notifyUrl: process.env.WX_NOTIFY_URL || 'https://your-domain.com/api/order/pay/notify',
+    pfx: process.env.WX_PFX_PATH,
+    sandbox: process.env.NODE_ENV !== 'production'
   }
 }; 

@@ -106,13 +106,19 @@
 }
 
 .delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
+  color: #999;
+  font-size: 40rpx;
+  font-weight: lighter;
   padding: 20rpx;
 }
 
-.delete-btn image {
-  width: 44rpx;
-  height: 44rpx;
-  opacity: 0.7;
+.delete-btn:active {
+  color: #666;
 }
 
 .footer {

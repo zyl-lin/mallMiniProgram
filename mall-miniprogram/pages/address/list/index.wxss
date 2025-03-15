@@ -1,0 +1,109 @@
+.container {
+  padding-bottom: 120rpx;
+  min-height: 100vh;
+  background: #f7f7f7;
+}
+
+.empty {
+  padding: 120rpx 0;
+  text-align: center;
+}
+
+.empty image {
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.address-list {
+  padding: 20rpx;
+}
+
+.address-item {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.03);
+}
+
+.info {
+  margin-bottom: 20rpx;
+}
+
+.user {
+  margin-bottom: 16rpx;
+}
+
+.name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.phone {
+  color: #666;
+}
+
+.default-tag {
+  display: inline-block;
+  font-size: 24rpx;
+  color: #e93b3d;
+  border: 1rpx solid #e93b3d;
+  padding: 2rpx 12rpx;
+  border-radius: 16rpx;
+  margin-left: 16rpx;
+}
+
+.address {
+  color: #333;
+  font-size: 28rpx;
+  line-height: 1.4;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1rpx solid #f5f5f5;
+  padding-top: 20rpx;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  margin-left: 30rpx;
+}
+
+.action-btn image {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 8rpx;
+}
+
+.action-btn text {
+  color: #666;
+  font-size: 26rpx;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 20rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.add-btn {
+  width: 100% !important;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+} 

@@ -9,16 +9,19 @@ router.use(userAuthMiddleware);
 // 获取地址列表
 router.get('/list', addressController.getList);
 
+// 获取地址详情
+router.get('/detail', addressController.getDetail);
+
 // 添加地址
 router.post('/add', addressController.add);
 
 // 更新地址
-router.put('/update', addressController.update);
+router.post('/update', addressController.update);
 
 // 删除地址
-router.delete('/delete/:id', addressController.delete);
+router.post('/delete', addressController.delete);
 
 // 设置默认地址
-router.put('/setDefault', addressController.setDefault);
+router.post('/set-default', addressController.setDefault);
 
 module.exports = router; 

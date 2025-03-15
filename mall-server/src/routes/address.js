@@ -24,4 +24,7 @@ router.post('/delete', addressController.delete);
 // 设置默认地址
 router.post('/set-default', addressController.setDefault);
 
+// 获取默认地址
+router.get('/default', addressController.getDefault);
+
 module.exports = router; 

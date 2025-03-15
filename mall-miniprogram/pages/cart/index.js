@@ -6,7 +6,8 @@ Page({
     cartList: [],
     totalPrice: 0,
     selectedAll: false,
-    loading: true  // 添加loading状态
+    loading: true,  // 添加loading状态
+    selectedAddress: null
   },
 
   onShow() {
@@ -26,28 +27,9 @@ Page({
       return
     }
 
-    // 检查图片资源是否存在
-    try {
-      wx.getImageInfo({
-        src: '/assets/images/checked.png',
-        success: () => {
-          console.log('选中图片资源加载成功')
-        },
-        fail: (error) => {
-          console.error('选中图片资源加载失败:', error)
-        }
-      })
-      wx.getImageInfo({
-        src: '/assets/images/unchecked.png',
-        success: () => {
-          console.log('未选中图片资源加载成功')
-        },
-        fail: (error) => {
-          console.error('未选中图片资源加载失败:', error)
-        }
-      })
-    } catch (error) {
-      console.error('图片资源检查失败:', error)
+    // 如果没有选择的地址，才获取默认地址
+    if (!this.data.selectedAddress) {
+      this.getDefaultAddress()
     }
 
     this.getCartList()
@@ -95,6 +77,30 @@ Page({
         icon: 'none'
       })
     }
+  },
+
+  // 获取默认地址
+  async getDefaultAddress() {
+    try {
+      const res = await request({
+        url: '/api/address/default'
+      })
+      if (res.code === 0 && res.data) {
+        console.log('获取默认地址成功:', res.data)
+        this.setData({
+          selectedAddress: res.data
+        })
+      }
+    } catch (error) {
+      console.error('获取默认地址失败:', error)
+    }
+  },
+
+  // 跳转到地址列表
+  goToAddress() {
+    wx.navigateTo({
+      url: '/pages/address/list/index?from=cart'
+    })
   },
 
   // 更新商品数量
@@ -214,6 +220,15 @@ Page({
       })
       return
     }
+    
+    if (!this.data.selectedAddress) {
+      wx.showToast({
+        title: '请选择收货地址',
+        icon: 'none'
+      })
+      return
+    }
+    
     wx.navigateTo({
       url: '/pages/order/create/index'
     })

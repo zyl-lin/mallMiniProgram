@@ -27,7 +27,7 @@ exports.getList = async (req, res) => {
 exports.add = async (req, res) => {
   try {
     const userId = req.userId;
-    const { name, phone, province, city, district, detail, is_default } = req.body;
+    const { receiver_name, receiver_phone, province, city, district, detail_address, is_default } = req.body;
 
     // 如果设置为默认地址，先将其他地址设为非默认
     if (is_default) {
@@ -39,7 +39,7 @@ exports.add = async (req, res) => {
 
     await db.query(
       'INSERT INTO address (user_id, receiver_name, receiver_phone, province, city, district, detail_address, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [userId, name, phone, province, city, district, detail, is_default ? 1 : 0]
+      [userId, receiver_name, receiver_phone, province, city, district, detail_address, is_default ? 1 : 0]
     );
 
     res.json({
@@ -59,7 +59,7 @@ exports.add = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const userId = req.userId;
-    const { id, name, phone, province, city, district, detail, is_default } = req.body;
+    const { id, receiver_name, receiver_phone, province, city, district, detail_address, is_default } = req.body;
 
     // 检查地址是否存在
     const [address] = await db.query(
@@ -84,7 +84,7 @@ exports.update = async (req, res) => {
 
     await db.query(
       'UPDATE address SET receiver_name = ?, receiver_phone = ?, province = ?, city = ?, district = ?, detail_address = ?, is_default = ? WHERE id = ? AND user_id = ?',
-      [name, phone, province, city, district, detail, is_default ? 1 : 0, id, userId]
+      [receiver_name, receiver_phone, province, city, district, detail_address, is_default ? 1 : 0, id, userId]
     );
 
     res.json({
@@ -183,6 +183,37 @@ exports.getDetail = async (req, res) => {
     res.status(500).json({
       code: 500,
       message: '获取地址详情失败'
+    });
+  }
+};
+
+// 获取默认地址
+exports.getDefault = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const [rows] = await db.query(
+      'SELECT * FROM address WHERE user_id = ? AND is_default = 1 LIMIT 1',
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.json({
+        code: 0,
+        data: null,
+        message: '暂无默认地址'
+      });
+    }
+
+    res.json({
+      code: 0,
+      data: rows[0],
+      message: '获取成功'
+    });
+  } catch (error) {
+    console.error('获取默认地址失败:', error);
+    res.status(500).json({
+      code: 500,
+      message: '获取默认地址失败'
     });
   }
 }; 

@@ -105,21 +105,28 @@ Page({
 
     // 获取订单数量
     async getOrderCount() {
-        console.log('=== Requesting Order Count ===')
+        console.log('=== 获取订单状态统计 ===')
         try {
-            const res = await request({
-                url: '/api/order/count',
-                method: 'GET'
+            const res = await wx.cloud.callFunction({
+                name: 'order',
+                data: {
+                    action: 'getOrderCount'
+                }
             })
-            console.log('Order count response:', res)
             
-            if (res.code === 0) {
+            console.log('订单状态统计结果:', res.result)
+            
+            if (res.result.code === 0) {
                 this.setData({
-                    orderCount: res.data
+                    orderCount: {
+                        unpaid: res.result.data.unpaid || 0,
+                        undelivered: res.result.data.undelivered || 0,
+                        delivered: res.result.data.delivered || 0
+                    }
                 })
             }
         } catch (err) {
-            console.error('Get order count failed:', err)
+            console.error('获取订单状态统计失败:', err)
         }
     },
 

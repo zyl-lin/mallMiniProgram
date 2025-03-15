@@ -4,7 +4,17 @@ const { checkLogin } = require('../../../utils/auth')
 Page({
   data: {
     addressList: [],
-    loading: true
+    loading: true,
+    fromCart: false
+  },
+
+  onLoad(options) {
+    // 从参数中获取来源标记
+    this.setData({
+      fromCart: options.from === 'cart'
+    })
+    console.log('地址列表页面参数:', options)
+    console.log('是否来自购物车:', this.data.fromCart)
   },
 
   onShow() {
@@ -46,8 +56,49 @@ Page({
     })
   },
 
+  // 点击地址项
+  handleAddressClick(e) {
+    const { id } = e.currentTarget.dataset
+    
+    // 来自购物车页面，选择地址并返回
+    if (this.data.fromCart) {
+      const selectedAddress = this.data.addressList.find(item => item.id === id)
+      if (selectedAddress) {
+        // 获取页面栈
+        const pages = getCurrentPages()
+        const cartPage = pages[pages.length - 2]
+        
+        if (cartPage) {
+          // 直接调用 setData 更新购物车页面的地址
+          cartPage.setData({
+            selectedAddress: selectedAddress
+          }, () => {
+            console.log('已更新购物车页面地址:', selectedAddress)
+          })
+          
+          // 延迟返回确保数据更新完成
+          setTimeout(() => {
+            wx.navigateBack()
+          }, 100)
+        } else {
+          console.error('未找到购物车页面实例')
+          wx.navigateBack()
+        }
+      }
+      return
+    }
+    
+    // 来自其他页面，进入编辑页面
+    wx.navigateTo({
+      url: `/pages/address/edit/index?id=${id}`
+    })
+  },
+
   // 编辑地址
   editAddress(e) {
+    // 如果是从购物车页面来的，不允许编辑
+    if (this.data.fromCart) return
+    
     const { id } = e.currentTarget.dataset
     wx.navigateTo({
       url: `/pages/address/edit/index?id=${id}`

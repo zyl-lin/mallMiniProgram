@@ -10,12 +10,12 @@ Page({
     data: {
         id: null,
         address: {
-            name: '',
-            phone: '',
+            receiver_name: '',
+            receiver_phone: '',
             province: '',
             city: '',
             district: '',
-            detail: '',
+            detail_address: '',
             is_default: false
         },
         region: ['请选择省市区'],
@@ -135,14 +135,14 @@ Page({
         const { address } = this.data
         
         // 表单验证
-        if (!address.name.trim()) {
+        if (!address.receiver_name.trim()) {
             wx.showToast({
                 title: '请输入收货人姓名',
                 icon: 'none'
             })
             return
         }
-        if (!/^1\d{10}$/.test(address.phone)) {
+        if (!/^1\d{10}$/.test(address.receiver_phone)) {
             wx.showToast({
                 title: '请输入正确的手机号',
                 icon: 'none'
@@ -156,7 +156,7 @@ Page({
             })
             return
         }
-        if (!address.detail.trim()) {
+        if (!address.detail_address.trim()) {
             wx.showToast({
                 title: '请输入详细地址',
                 icon: 'none'

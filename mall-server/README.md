@@ -632,3 +632,51 @@
 **修改的文件**:
 - src/routes/address.js
 - src/controllers/address.js
+
+## 2024-03-22 会话总结 (补充19)
+
+**会话主要目的**：
+- 添加获取默认地址功能
+
+**完成的主要任务**：
+- 实现了获取用户默认地址的API接口
+- 添加了相应的路由配置
+- 处理了无默认地址的情况
+
+**关键决策和解决方案**：
+- 通过 is_default 字段筛选默认地址
+- 当没有默认地址时返回 null，而不是错误
+- 保持与其他地址接口相同的响应格式
+
+**使用的技术栈**：
+- Node.js
+- Express
+- MySQL
+
+**修改的文件**:
+- src/controllers/address.js
+- src/routes/address.js
+
+## 2024-03-22 会话总结 (补充20)
+
+**会话主要目的**：
+- 修正地址管理功能中的字段名不一致问题
+
+**完成的主要任务**：
+- 检查了数据库address表结构
+- 修正了地址添加和更新功能中的字段名
+- 确保所有SQL查询使用正确的字段名
+
+**关键决策和解决方案**：
+- 将name改为receiver_name
+- 将phone改为receiver_phone
+- 将detail改为detail_address
+- 保持与数据库表结构完全一致
+
+**使用的技术栈**：
+- Node.js
+- Express
+- MySQL
+
+**修改的文件**:
+- src/controllers/address.js

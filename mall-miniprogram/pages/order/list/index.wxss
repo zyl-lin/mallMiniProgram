@@ -1,0 +1,175 @@
+.container {
+  min-height: 100vh;
+  background: #f7f7f7;
+}
+
+.tabs {
+  display: flex;
+  background: #fff;
+  padding: 0 30rpx;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.tab-item {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #333;
+  position: relative;
+}
+
+.tab-item.active {
+  color: #e93b3d;
+}
+
+.tab-item.active:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 4rpx;
+  background: #e93b3d;
+}
+
+.order-list {
+  margin-top: 80rpx;
+  padding: 20rpx;
+  height: calc(100vh - 80rpx);
+}
+
+.order-item {
+  background: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.order-no {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.order-status {
+  font-size: 26rpx;
+  color: #e93b3d;
+}
+
+.goods-list {
+  padding: 20rpx 0;
+}
+
+.goods-item {
+  display: flex;
+  padding: 20rpx 0;
+}
+
+.goods-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 8rpx;
+}
+
+.goods-info {
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.goods-name {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.goods-specs {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.goods-price-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goods-price {
+  font-size: 28rpx;
+  color: #e93b3d;
+}
+
+.goods-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.order-footer {
+  padding-top: 20rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.total-wrap {
+  text-align: right;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.total-price {
+  color: #e93b3d;
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20rpx;
+}
+
+.btn {
+  margin-left: 20rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 30rpx;
+  font-size: 26rpx;
+  border-radius: 30rpx;
+  background: #fff;
+  color: #666;
+  border: 1rpx solid #ddd;
+}
+
+.btn.primary {
+  background: #e93b3d;
+  color: #fff;
+  border: none;
+}
+
+.empty {
+  padding-top: 200rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 200rpx;
+  height: 200rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-top: 20rpx;
+} 

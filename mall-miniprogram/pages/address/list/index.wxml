@@ -13,7 +13,7 @@
   <!-- 地址列表 -->
   <view class="address-list" wx:else>
     <view class="address-item" wx:for="{{addressList}}" wx:key="id">
-      <view class="info" bindtap="editAddress" data-id="{{item.id}}">
+      <view class="info" bindtap="handleAddressClick" data-id="{{item.id}}">
         <view class="user">
           <text class="name">{{item.receiver_name}}</text>
           <text class="phone">{{item.receiver_phone}}</text>
@@ -21,7 +21,8 @@
         </view>
         <view class="address">{{item.province}}{{item.city}}{{item.district}}{{item.detail_address}}</view>
       </view>
-      <view class="actions">
+      <!-- 只在非购物车来源时显示操作按钮 -->
+      <view class="actions" wx:if="{{!fromCart}}">
         <view class="action-btn" bindtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.is_default}}">
           <image src="/assets/images/default.png" mode="aspectFit"/>
           <text>设为默认</text>
@@ -36,6 +37,6 @@
 
   <!-- 底部按钮 -->
   <view class="footer">
-    <button class="add-btn" type="primary" bindtap="addAddress">新增收货地址</button>
+    <button class="add-btn" type="primary" bindtap="addAddress" wx:if="{{!fromCart}}">新增收货地址</button>
   </view>
 </view> 

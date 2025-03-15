@@ -3,22 +3,13 @@ const db = require('../utils/db');
 // 获取分类列表
 exports.getList = async (req, res) => {
   try {
-    const [rows] = await db.query('SELECT * FROM category ORDER BY sort ASC');
-    
-    // 构建分类树
-    const categoryTree = rows
-      .filter(item => item.parent_id === 0)
-      .map(item => ({
-        ...item,
-        children: rows
-          .filter(child => child.parent_id === item.id)
-          .sort((a, b) => a.sort - b.sort)
-      }))
-      .sort((a, b) => a.sort - b.sort);
+    const [rows] = await db.query('SELECT * FROM category ORDER BY sort DESC');
+    console.log('查询结果:', rows);
 
+    // 直接返回分类列表，不构建树形结构
     res.json({
       code: 0,
-      data: categoryTree,
+      data: rows,
       message: '获取成功'
     });
   } catch (error) {

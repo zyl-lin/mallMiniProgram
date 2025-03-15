@@ -1,12 +1,44 @@
 <view class="container">
-  <view class="category-list">
-    <view class="category-item" 
-          wx:for="{{categories}}" 
-          wx:key="id"
-          bindtap="goToCategoryGoods"
-          data-id="{{item.id}}">
-      <image class="category-img" src="{{item.image}}" mode="aspectFill" />
-      <view class="category-name">{{item.name}}</view>
+  <!-- 左侧分类导航 -->
+  <scroll-view class="nav" scroll-y>
+    <view 
+      class="nav-item {{currentCategory.id === item.id ? 'active' : ''}}"
+      wx:for="{{categories}}" 
+      wx:key="id"
+      bindtap="switchCategory"
+      data-category="{{item}}"
+    >
+      {{item.name}}
     </view>
-  </view>
+  </scroll-view>
+
+  <!-- 右侧商品列表 -->
+  <scroll-view class="goods-list" scroll-y bindscrolltolower="loadMore">
+    
+
+    <view class="goods-container">
+      <view 
+        class="goods-item" 
+        wx:for="{{goodsList}}" 
+        wx:key="id"
+        bindtap="goToDetail"
+        data-id="{{item.id}}"
+      >
+        <image class="goods-img" src="{{item.image_url}}" mode="aspectFill"/>
+        <view class="goods-info">
+          <view class="goods-name">{{item.name}}</view>
+          <view class="goods-price">¥{{item.price}}</view>
+          <view class="add-cart" catchtap="addToCart" data-id="{{item.id}}">
+            <image src="/assets/images/cart-add.png" mode="aspectFit"/>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="loading" wx:if="{{loading}}">加载中...</view>
+    <view class="no-more" wx:if="{{!hasMore && goodsList.length > 0}}">没有更多了</view>
+    <view class="empty" wx:if="{{!loading && goodsList.length === 0}}">
+      暂无商品
+    </view>
+  </scroll-view>
 </view> 

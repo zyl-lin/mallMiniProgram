@@ -482,3 +482,28 @@
 1. mall-server/src/controllers/order.js (更新)
 2. mall-server/README.md (更新) 
 
+## 2024-03-22 会话总结 (补充17)
+
+**会话主要目的**：
+- 解决 /api/category/list 接口返回空数据的问题
+
+**完成的主要任务**：
+- 添加了数据库查询的调试信息
+- 检查了数据库连接配置
+- 修改了分类列表的查询逻辑
+- 验证了路由配置
+
+**关键决策和解决方案**：
+- 移除了对 parent_id 字段的依赖，直接返回分类列表
+- 添加了详细的调试日志
+- 验证了数据库连接和表结构
+
+**使用的技术栈**：
+- Node.js
+- Express
+- MySQL
+
+**修改了哪些文件**：
+- src/controllers/category.js (修改)
+- src/utils/db.js (修改)
+- src/config/index.js (检查)

@@ -12,7 +12,18 @@ Page({
       { id: '1', name: '待发货' },   // 对应 status: '1'
       { id: '2', name: '待收货' },   // 对应 status: '2'
       { id: '3', name: '已完成' }    // 对应 status: '3'
-    ]
+    ],
+    // 添加状态文本映射
+    statusTextMap: {
+      0: '待付款',
+      1: '待发货',
+      2: '待收货',
+      3: '已完成'
+    },
+    // 添加分页相关数据
+    page: 1,
+    pageSize: 10,
+    hasMore: true
   },
 
   onLoad(options) {
@@ -35,12 +46,14 @@ Page({
 
   // 切换标签
   switchTab(e) {
-    const tabIndex = e.currentTarget.dataset.index // 使用索引而不是status值
+    const tabIndex = e.currentTarget.dataset.index
     if (this.data.currentTab === tabIndex) return
     
     this.setData({ 
       currentTab: tabIndex,
-      loading: true 
+      loading: true,
+      page: 1,
+      hasMore: true
     }, () => {
       this.loadOrderList()
     })
@@ -61,23 +74,39 @@ Page({
   // 加载订单列表
   async loadOrderList() {
     try {
-      const status = this.data.tabs[this.data.currentTab].id // 直接使用tab的id作为status
+      const status = this.data.tabs[this.data.currentTab].id
       console.log('请求订单列表，状态:', status)
 
       const res = await request({
         url: '/api/order/list',
         method: 'GET',
-        data: {
-          status: status
+        data: { 
+          status,
+          page: this.data.page,
+          pageSize: this.data.pageSize
         }
       })
 
       console.log('订单列表响应:', res)
 
       if (res.code === 0) {
+        // 处理订单数据，添加状态文本
+        const newOrders = (res.data.list || []).map(order => {
+          const goods = order.goods || []
+          return {
+            ...order,
+            goods,
+            statusText: this.data.statusTextMap[order.status],
+            totalCount: goods.reduce((sum, item) => sum + (item.quantity || 0), 0),
+            totalAmount: (order.total_amount || 0)
+          }
+        })
+
+        // 更新订单列表,判断是否还有更多数据
         this.setData({
-          orderList: res.data.list || [],
-          loading: false
+          orderList: this.data.page === 1 ? newOrders : [...this.data.orderList, ...newOrders],
+          loading: false,
+          hasMore: newOrders.length === this.data.pageSize
         })
       } else {
         throw new Error(res.msg || '获取订单列表失败')
@@ -174,6 +203,17 @@ Page({
       wx.showToast({
         title: error.message || '支付失败',
         icon: 'none'
+      })
+    }
+  },
+
+  // 添加页面上拉触底事件
+  onReachBottom() {
+    if (this.data.hasMore && !this.data.loading) {
+      this.setData({
+        page: this.data.page + 1
+      }, () => {
+        this.loadOrderList()
       })
     }
   }

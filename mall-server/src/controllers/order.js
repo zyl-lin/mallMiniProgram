@@ -137,52 +137,14 @@ exports.getList = async (req, res) => {
     const pageSizeNum = parseInt(pageSize) || 10;
     const offset = (pageNum - 1) * pageSizeNum;
 
-    // 构建查询条件
-    let sql = 'SELECT * FROM orders WHERE user_id = ?';
-    const params = [userId];
-
-    // 只有当 status 是有效数字时才添加状态条件
-    if (status !== undefined && status !== '' && !isNaN(status)) {
-      const statusNum = parseInt(status);
-      // 检查状态值是否在有效范围内 (0-4)
-      if (statusNum >= 0 && statusNum <= 4) {
-        sql += ' AND status = ?';
-        params.push(statusNum);
-      }
-    }
-
-    // 添加排序和分页
-    sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
-    params.push(pageSizeNum, offset);
-
-    // 查询订单列表
-    const [orders] = await db.query(sql, params);
-
-    // 获取每个订单的商品信息
-    for (const order of orders) {
-      // 查询订单商品
-      const [goods] = await db.query(
-        `SELECT og.*, g.name, g.image_url, g.price as current_price
-         FROM order_goods og
-         LEFT JOIN goods g ON og.goods_id = g.id
-         WHERE og.order_id = ?`,
-        [order.id]
-      );
-
-      order.goods = goods;
-
-      // 添加状态说明
-      order.statusText = {
-        0: '待支付',
-        1: '已支付',
-        2: '已发货',
-        3: '已完成',
-        4: '已取消'
-      }[order.status] || '未知状态';
-    }
-
-    // 获取总数
-    let countSql = 'SELECT COUNT(*) as total FROM orders WHERE user_id = ?';
+    // 先获取总数统计
+    let countSql = 'SELECT ' +
+                   'COUNT(*) as total, ' +
+                   'SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) as unpaid_count, ' +
+                   'SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as paid_count, ' +
+                   'SUM(CASE WHEN status = 2 THEN 1 ELSE 0 END) as shipped_count, ' +
+                   'SUM(CASE WHEN status = 3 THEN 1 ELSE 0 END) as completed_count ' +
+                   'FROM orders WHERE user_id = ?';
     const countParams = [userId];
 
     // 状态条件也要加到总数查询中
@@ -194,16 +156,111 @@ exports.getList = async (req, res) => {
       }
     }
 
-    const [total] = await db.query(countSql, countParams);
+    // 打印完整的统计查询 SQL
+    let countParamIndex = 0;
+    const fullCountSql = countSql.replace(/\?/g, () => {
+      const value = countParams[countParamIndex++];
+      return typeof value === 'string' ? `'${value}'` : value;
+    });
+    console.log('完整的订单统计查询 SQL:', fullCountSql);
+
+    const [counts] = await db.query(countSql, countParams);
+    const total = counts[0].total;
+
+    // 如果已经没有更多数据，直接返回
+    if (offset >= total) {
+      return res.json({
+        code: 0,
+        data: {
+          list: [],
+          pagination: {
+            total,
+            page: pageNum,
+            pageSize: pageSizeNum,
+            hasMore: false
+          },
+          summary: {
+            total: counts[0].total,
+            unpaid: counts[0].unpaid_count,
+            paid: counts[0].paid_count,
+            shipped: counts[0].shipped_count,
+            completed: counts[0].completed_count
+          }
+        },
+        message: '获取成功'
+      });
+    }
+
+    // 构建查询条件
+    let sql = 'SELECT o.*, ' +
+              '(SELECT COUNT(*) FROM order_goods WHERE order_id = o.id) as goods_count ' +
+              'FROM orders o WHERE o.user_id = ?';
+    const params = [userId];
+
+    // 只有当 status 是有效数字时才添加状态条件
+    if (status !== undefined && status !== '' && !isNaN(status)) {
+      const statusNum = parseInt(status);
+      if (statusNum >= 0 && statusNum <= 4) {
+        sql += ' AND o.status = ?';
+        params.push(statusNum);
+      }
+    }
+
+    // 添加排序和分页
+    sql += ' ORDER BY o.created_at DESC LIMIT ? OFFSET ?';
+    params.push(pageSizeNum, offset);
+
+    // 打印完整的 SQL 查询语句
+    let paramIndex = 0;
+    const fullSql = sql.replace(/\?/g, () => {
+      const value = params[paramIndex++];
+      return typeof value === 'string' ? `'${value}'` : value;
+    });
+    console.log('完整的订单列表查询 SQL:', fullSql);
+
+    // 查询订单列表
+    const [orders] = await db.query(sql, params);
+    console.log('订单列表查询结果:', orders.length, '条记录');
+
+    // 获取每个订单的商品信息
+    for (const order of orders) {
+      const [goods] = await db.query(
+        `SELECT og.*, g.name, g.image_url, g.price as current_price
+         FROM order_goods og
+         LEFT JOIN goods g ON og.goods_id = g.id
+         WHERE og.order_id = ?`,
+        [order.id]
+      );
+
+      order.goods = goods;
+      order.statusText = {
+        0: '待支付',
+        1: '已支付',
+        2: '已发货',
+        3: '已完成',
+        4: '已取消'
+      }[order.status] || '未知状态';
+    }
+
+    // 计算是否还有更多数据
+    const hasMore = offset + orders.length < total;
 
     res.json({
       code: 0,
       data: {
         list: orders,
         pagination: {
-          total: total[0].total,
+          total,
           page: pageNum,
-          pageSize: pageSizeNum
+          pageSize: pageSizeNum,
+          hasMore // 添加是否还有更多数据的标志
+        },
+        summary: {
+          total: counts[0].total,
+          unpaid: counts[0].unpaid_count,
+          paid: counts[0].paid_count,
+          shipped: counts[0].shipped_count,
+          completed: counts[0].completed_count
         }
       },
       message: '获取成功'
@@ -213,7 +270,7 @@ exports.getList = async (req, res) => {
     console.error('获取订单列表失败:', error);
     res.status(500).json({
       code: 500,
-      message: '获取订单列表失败'
+      message: error.message || '获取订单列表失败'
     });
   }
 };

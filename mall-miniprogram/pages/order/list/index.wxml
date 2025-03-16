@@ -11,22 +11,21 @@
     </view>
   </view>
 
-  <scroll-view scroll-y class="order-list">
+  <scroll-view scroll-y class="order-list" bindscrolltolower="onReachBottom">
     <view class="order-item" wx:for="{{orderList}}" wx:key="id">
       <view class="order-header">
-        <text class="order-no">订单号：{{item.orderNo}}</text>
+        <text class="order-no">订单号：{{item.order_no}}</text>
         <text class="order-status">{{item.statusText}}</text>
       </view>
       
       <view class="goods-list">
-        <view class="goods-item" wx:for="{{item.goodsList}}" wx:key="id" wx:for-item="goods">
-          <image class="goods-img" src="{{goods.image}}" mode="aspectFill"/>
+        <view class="goods-item" wx:for="{{item.goods}}" wx:key="id" wx:for-item="goods">
+          <image class="goods-img" src="{{goods.goods_image}}" mode="aspectFill"/>
           <view class="goods-info">
-            <view class="goods-name">{{goods.name}}</view>
-            <view class="goods-specs">{{goods.specs}}</view>
+            <view class="goods-name">{{goods.goods_name}}</view>
             <view class="goods-price-wrap">
-              <text class="goods-price">¥{{goods.price}}</text>
-              <text class="goods-count">x{{goods.count}}</text>
+              <text class="goods-price">¥{{goods.goods_price}}</text>
+              <text class="goods-count">x{{goods.quantity}}</text>
             </view>
           </view>
         </view>
@@ -36,12 +35,12 @@
         <view class="total-wrap">
           <text>共{{item.totalCount}}件商品</text>
           <text>合计：</text>
-          <text class="total-price">¥{{item.totalPrice}}</text>
+          <text class="total-price">¥{{item.total_amount}}</text>
         </view>
         <view class="btn-group">
-          <button class="btn" wx:if="{{item.status === 1}}" bindtap="cancelOrder" data-id="{{item.id}}">取消订单</button>
-          <button class="btn primary" wx:if="{{item.status === 1}}" bindtap="payOrder" data-id="{{item.id}}">立即付款</button>
-          <button class="btn primary" wx:if="{{item.status === 3}}" bindtap="confirmReceive" data-id="{{item.id}}">确认收货</button>
+          <button class="btn" wx:if="{{item.status === 0}}" bindtap="cancelOrder" data-id="{{item.id}}">取消订单</button>
+          <button class="btn primary" wx:if="{{item.status === 0}}" bindtap="payOrder" data-id="{{item.id}}">立即付款</button>
+          <button class="btn primary" wx:if="{{item.status === 2}}" bindtap="confirmReceive" data-id="{{item.id}}">确认收货</button>
         </view>
       </view>
     </view>
@@ -50,5 +49,9 @@
       <image class="empty-icon" src="/assets/images/empty-order.png"/>
       <text class="empty-text">暂无相关订单</text>
     </view>
+
+    <!-- 底部加载提示 -->
+    <view class="loading-tip" wx:if="{{loading}}">加载中...</view>
+    <view class="loading-tip" wx:if="{{!loading && !hasMore && orderList.length > 0}}">没有更多订单了</view>
   </scroll-view>
 </view> 

@@ -96,10 +96,7 @@ Page({
 
   // 编辑地址
   editAddress(e) {
-    // 如果是从购物车页面来的，不允许编辑
-    if (this.data.fromCart) return
-    
-    const { id } = e.currentTarget.dataset
+    const id = e.currentTarget.dataset.id
     wx.navigateTo({
       url: `/pages/address/edit/index?id=${id}`
     })

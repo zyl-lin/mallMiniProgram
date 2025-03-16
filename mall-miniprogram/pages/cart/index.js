@@ -267,7 +267,7 @@ Page({
           url: '/api/order/pay',
           method: 'POST',
           data: {
-            orderId: res.data.orderNo
+            orderNo: res.data.orderNo
           }
         })
 

@@ -8,7 +8,7 @@
           class="input" 
           placeholder="请输入收货人姓名" 
           value="{{address.receiver_name}}"
-          data-field="name"
+          data-field="receiver_name"
           bindinput="onInput"
         />
       </view>
@@ -20,7 +20,7 @@
           maxlength="11"
           placeholder="请输入手机号码" 
           value="{{address.receiver_phone}}"
-          data-field="phone"
+          data-field="receiver_phone"
           bindinput="onInput"
         />
       </view>
@@ -42,7 +42,7 @@
           class="textarea" 
           placeholder="请输入详细地址，如街道、门牌号等" 
           value="{{address.detail_address}}"
-          data-field="detail"
+          data-field="detail_address"
           bindinput="onInput"
         />
       </view>

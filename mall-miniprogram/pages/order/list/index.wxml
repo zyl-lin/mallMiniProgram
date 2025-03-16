@@ -39,7 +39,14 @@
         </view>
         <view class="btn-group">
           <button class="btn" wx:if="{{item.status === 0}}" bindtap="cancelOrder" data-id="{{item.id}}">取消订单</button>
-          <button class="btn primary" wx:if="{{item.status === 0}}" bindtap="payOrder" data-id="{{item.id}}">立即付款</button>
+          <button 
+            class="btn primary"
+            bindtap="payOrder" 
+            data-order_no="{{item.order_no}}"
+            wx:if="{{item.status == 0}}"
+          >
+            立即付款
+          </button>
           <button class="btn primary" wx:if="{{item.status === 2}}" bindtap="confirmReceive" data-id="{{item.id}}">确认收货</button>
         </view>
       </view>

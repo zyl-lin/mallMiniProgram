@@ -178,28 +178,49 @@ Page({
     }
   },
 
-  // 去支付
+  // 修改支付订单方法
   async payOrder(e) {
-    const orderId = e.currentTarget.dataset.id
+    const orderNo = e.currentTarget.dataset.order_no  // 修改这里,使用order_no
     try {
-      const res = await request({
-        url: '/api/order/pay',
-        method: 'POST',
-        data: { orderId }
+      wx.showLoading({
+        title: '正在发起支付...'
       })
 
-      if (res.code === 0) {
-        // 由于是测试环境，直接模拟支付成功
+      // 调用支付接口
+      const payRes = await request({
+        url: '/api/order/pay',
+        method: 'POST',
+        data: {
+          orderNo  // 修改这里,使用orderNo
+        }
+      })
+
+      console.log('支付接口响应:', payRes)
+
+      if (payRes.code === 0) {
+        // 由于是测试环境,直接模拟支付成功
+        wx.hideLoading()
+        
         wx.showToast({
           title: '支付成功',
           icon: 'success'
         })
-        this.loadOrderList()
+
+        // 刷新订单列表
+        setTimeout(() => {
+          this.setData({
+            page: 1,
+            orderList: []
+          }, () => {
+            this.loadOrderList()
+          })
+        }, 1500)
       } else {
-        throw new Error(res.msg || '支付失败')
+        throw new Error(payRes.msg || '支付失败')
       }
     } catch (error) {
       console.error('支付失败:', error)
+      wx.hideLoading()
       wx.showToast({
         title: error.message || '支付失败',
         icon: 'none'

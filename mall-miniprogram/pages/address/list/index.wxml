@@ -27,6 +27,10 @@
           <image src="/assets/images/default.png" mode="aspectFit"/>
           <text>设为默认</text>
         </view>
+        <view class="action-btn" bindtap="editAddress" data-id="{{item.id}}">
+          <image src="/assets/images/edit.png" mode="aspectFit"/>
+          <text>编辑</text>
+        </view>
         <view class="action-btn" bindtap="deleteAddress" data-id="{{item.id}}">
           <image src="/assets/images/delete.png" mode="aspectFit"/>
           <text>删除</text>

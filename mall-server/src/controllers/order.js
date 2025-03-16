@@ -444,7 +444,7 @@ exports.pay = async (req, res) => {
   try {
     const userId = req.userId;
     const orderId = req.params.id;
-    const orderNo = req.body.orderId;
+    const orderNo = req.body.orderNo;
 
     let sql = 'SELECT * FROM orders WHERE user_id = ?';
     const params = [userId];

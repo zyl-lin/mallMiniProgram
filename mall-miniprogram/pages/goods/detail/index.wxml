@@ -1,0 +1,39 @@
+<view class="container">
+  <!-- 加载中 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <block wx:elif="{{goods}}">
+    <!-- 商品图片 -->
+    <swiper class="goods-swiper" indicator-dots autoplay circular>
+      <swiper-item>
+        <image src="{{goods.image_url}}" mode="aspectFill" />
+      </swiper-item>
+    </swiper>
+
+    <!-- 商品信息 -->
+    <view class="goods-info">
+      <view class="goods-name">{{goods.name}}</view>
+      <view class="goods-price">¥{{goods.price}}</view>
+    </view>
+
+    <!-- 商品详情 -->
+    <view class="goods-detail">
+      <view class="detail-title">商品详情</view>
+      <rich-text nodes="{{goods.detail}}" class="detail-content"></rich-text>
+    </view>
+  </block>
+
+  <!-- 底部操作栏 -->
+  <view class="footer-bar" wx:if="{{goods}}">
+    <view class="cart-icon" bindtap="goToCart">
+      <image src="/assets/images/cart.png" mode="aspectFit"/>
+      <text>购物车</text>
+    </view>
+    <view class="btn-group">
+      <view class="add-cart" bindtap="addToCart">加入购物车</view>
+      <view class="buy-now" bindtap="buyNow">立即购买</view>
+    </view>
+  </view>
+</view> 
